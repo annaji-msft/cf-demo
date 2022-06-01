@@ -1,6 +1,17 @@
 import styles from "./App.module.css";
-import { Container, Row, Col, Form, Button, Spinner } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import React, { useState } from "react";
+import {
+  FontSizes,
+  Text,
+  TextField,
+  Dropdown,
+  DefaultButton,
+  PrimaryButton,
+  DefaultPalette,
+  Spinner,
+  SpinnerSize,
+} from "@fluentui/react";
 import axios from "axios";
 
 function App() {
@@ -59,93 +70,97 @@ function App() {
     }
   };
 
+  const options = [
+    { key: "urgent", text: "Urgent" },
+    { key: "high", text: "High" },
+    { key: "normal", text: "Normal" },
+    { key: "low", text: "Low" },
+  ];
+
   return (
     <Container
       style={{
-        backgroundColor: "#EEE9E9	",
         height: "100vh",
       }}
       fluid
     >
       <Row>
         <Col className={styles.edge}></Col>
-        <Col xs={6} className={styles.middle}>
-          <h1> Create Zendesk Ticket </h1>
-          <Form className={styles.form}>
-            <Form.Group xs={2} className="mb-3">
-              <Form.Label>Subject</Form.Label>
-              <Form.Control
-                onChange={(event) => setSubject(event.target.value)}
-                placeholder="Enter subject"
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Comment</Form.Label>
-              <Form.Control
-                onChange={(event) => setComment(event.target.value)}
-                placeholder="Enter comment"
-              />
-            </Form.Group>
-            <Form.Group className="mb-4">
-              <Form.Label>Priority</Form.Label>
-              <Form.Select
-                onChange={(event) => {
-                  setPriority(event.target.value);
-                }}
-              >
-                <option>Select Priority </option>
-                <option>Urgent</option>
-                <option>High</option>
-                <option>Normal</option>
-                <option>Low</option>
-              </Form.Select>
-            </Form.Group>
-          </Form>
+        <Col xs={5} className={styles.middle + " mt-5"}>
+          <Text style={{ fontSize: FontSizes.xxLargePlus }} className="mb-3">
+            {" "}
+            Create Zendesk Ticket{" "}
+          </Text>
+          <TextField
+            placeholder="Enter subject"
+            label="Subject"
+            required
+            onChange={(event, newValue) => setSubject(newValue)}
+            className="mb-2"
+          />
+          <TextField
+            placeholder="Enter comments"
+            label="Comments"
+            multiline
+            autoAdjustHeight
+            required
+            className="mb-2"
+            onChange={(event, newValue) => {
+              setComment(newValue);
+            }}
+          />
+          <Dropdown
+            placeholder="Select priority"
+            label="Priority"
+            required
+            onChange={(event, selectedOption) => {
+              setPriority(selectedOption.key);
+            }}
+            options={options}
+            className="mb-5"
+          />
           {loaded ? (
-            <Button
-              className="mb-3"
+            <DefaultButton
+              className="mb-4"
               onClick={(e) => handleSubmit(e)}
               variant="primary"
             >
               Submit
-            </Button>
+            </DefaultButton>
           ) : (
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
+            <Spinner size={SpinnerSize.large} />
           )}
 
           {success ? (
             <>
-              <p style={{ color: "green" }}>
+              <Text style={{ color: DefaultPalette.themePrimary }}>
                 {" "}
                 Successfully created Zendesk ticket and sent message to Teams!
-              </p>
-              <p> Ticket ID: {ticketId}</p>
-              <h6> To resolve this ticket, please pay $20 to the admin </h6>
+              </Text>
+              <Text> Ticket ID: {ticketId}</Text>
+              <Text style={{ fontWeight: "bold" }}>
+                {" "}
+                To resolve this ticket, please pay $20 to the admin{" "}
+              </Text>
 
               {paymentLoaded ? (
-                <Button
+                <PrimaryButton
                   onClick={(e) => handlePayment(e)}
-                  variant="success"
                   className="mt-3 mb-3"
                 >
                   {" "}
                   Pay with Stripe
-                </Button>
+                </PrimaryButton>
               ) : (
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </Spinner>
+                <Spinner size={SpinnerSize.large} />
               )}
               {paymentSuccess ? (
                 <>
-                  <p style={{ color: "green" }}>
+                  <Text style={{ color: DefaultPalette.themePrimary }}>
                     {" "}
                     Successfully created Payment Intent!
-                  </p>
-                  <p> Payment Intent ID: {paymentId}</p>
+                  </Text>
+                  <Text> Payment Intent ID: {paymentId}</Text>
                 </>
               ) : null}
             </>
