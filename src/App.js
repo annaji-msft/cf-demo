@@ -89,7 +89,7 @@ function App() {
         <Col xs={5} className={styles.middle + " mt-5"}>
           <Text style={{ fontSize: FontSizes.xxLargePlus }} className="mb-3">
             {" "}
-            Create Zendesk Ticket{" "}
+            Intern Feedback Box{" "}
           </Text>
           <TextField
             placeholder="Enter subject"
